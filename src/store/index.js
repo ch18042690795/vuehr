@@ -11,7 +11,7 @@ export default new Vuex.Store(
     mutations: {
 
       initMenu(state,menus){
-        debugger;
+
         state.routes=menus;
       }
     }

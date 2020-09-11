@@ -21,7 +21,7 @@ import './utils/filter_utils'
 
 Vue.config.productionTip = false
 router.beforeEach((to, from, next) => {
-  debugger;
+
   initMenu(router, store)
   next()
 

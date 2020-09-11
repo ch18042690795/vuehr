@@ -12,11 +12,11 @@ export const isNotNullORBlank = (...args)=> {
   return true;
 }
 export const initMenu = (router, store)=> {
-  debugger;
+
   if (store.state.routes.length > 0) {
     return;
   }
-  getRequest("/config/sysmenu").then(resp=> {
+  getRequest("").then(resp=> {
     if (resp && resp.status == 200) {
       var fmtRoutes = formatRoutes([
         {
@@ -167,15 +167,50 @@ export const initMenu = (router, store)=> {
             "keepAlive": false,
             "requireAuth": true
           }
+        },
+        {
+          "id": 7,
+          "path": "/home",
+          "component": "Home",
+          "name": "文件上传监控",
+          "iconCls": "fa fa-windows",
+          "children": [
+            
+            {
+              "id": null,
+              "path": "/Fup/system",
+              "component": "FupjkSystem",
+              "name": "各系统上传监控",
+              "children": [],
+              "meta": {
+                "keepAlive": false,
+                "requireAuth": true
+              }
+            },
+            {
+              "id": null,
+              "path": "/Fup/all",
+              "component": "Fupssjk",
+              "name": "上传日志查询",
+              "iconCls": null,
+              "children": [],
+              "meta": {
+                "keepAlive": false,
+                "requireAuth": true
+              }
+            },
+          ],
+          "meta": {
+            "keepAlive": false,
+            "requireAuth": true
+          }
         }
       ]);
-      console.log(fmtRoutes);
-      debugger;
       console.log(router);
       router.addRoutes(fmtRoutes);
-      debugger;
+
       store.commit('initMenu', fmtRoutes);
-      debugger;
+
       store.dispatch('connect');
     }
   })
@@ -184,7 +219,7 @@ export const formatRoutes = (routes)=> {
 
   let fmRoutes = [];
   routes.forEach(router=> {
-    debugger;
+
     let {
       path,
       component,
@@ -200,11 +235,9 @@ export const formatRoutes = (routes)=> {
       path: path,
       component(resolve){
         if (component.startsWith("Home")) {
-          debugger;
+
           require(['../components/' + component + '.vue'], resolve)
         } else if (component.startsWith("Emp")) {
-          debugger;
-          console.log(component)
           require(['../components/emp/' + component + '.vue'], resolve)
         }
         else if (component.startsWith("Per")) {
@@ -217,6 +250,8 @@ export const formatRoutes = (routes)=> {
           require(['../components/sta/' + component + '.vue'], resolve)
         } else if (component.startsWith("SW")) {
           require(['../components/SW/' + component + '.vue'], resolve)
+        } else if (component.startsWith("Fup")) {
+          require(['../components/Fup/' + component + '.vue'], resolve)
         }
       },
       name: name,

@@ -2,7 +2,8 @@
   <div>
     <el-container class="home-container">
       <el-header class="home-header">
-        <span class="home_title">淄矿信息展示平台</span>
+        <span class="home_title">淄矿集团煤矿事故风险分析联网集成软件平台
+</span>
  <!--       <div style="display: flex;align-items: center;margin-right: 7px">
           <el-badge style="margin-right: 30px" :is-dot="this.$store.state.nfDot">
             <i class="fa fa-bell-o" @click="goChat" style="cursor: pointer"></i>
@@ -60,8 +61,6 @@
   export default{
     computed: {
       routes(){
-
-        debugger;
         return this.$store.state.routes
       }
     }

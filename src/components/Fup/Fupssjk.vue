@@ -52,76 +52,39 @@
               </template>
             </el-table-column>
             <el-table-column
-              prop="mineName"
+              prop="mine"
               width="180"
               align="left"
               label="煤矿名称">
             </el-table-column>
-           <!-- <el-table-column
-              prop="lotName"
-              label="地段名称"
-              width="180">
-            </el-table-column>-->
             <el-table-column
+              width="120"
+              align="left"
+              prop="system"
+              label="系统名称">
+            </el-table-column>
+            <el-table-column
+              prop="file"
               width="180"
               align="left"
-              prop="hydrologyName"
-              label="水文点名">
+              label="文件名称">
             </el-table-column>
             <el-table-column
-              prop="observationLayer"
-              width="180"
-              align="left"
-              label="观测层位">
-            </el-table-column>
-            <el-table-column
-              prop="sensor"
-              width="180"
-              label="传感器类型">
-            </el-table-column>
-           <!-- <el-table-column
-              width="180"
-              prop="oblayerThick"
-              label="观测层厚">
-            </el-table-column>-->
-       <!--     <el-table-column
-              prop="oblayerDepth"
-              width="180"
-              label="观测层深">
-            </el-table-column>-->
-<!--            <el-table-column
-              prop="holeDepth"
-              label="孔深">
-            </el-table-column>
-            <el-table-column
-              prop="aperture"
-              width="180"
-              align="left"
-              label="孔径">
-            </el-table-column>
-            <el-table-column
-              prop="orificeX"
+              prop="size"
               width="100"
-              label="孔口x">
+              label="文件大小">
             </el-table-column>
             <el-table-column
-              prop="orificeY"
+              prop="time"
               width="220"
-              align="left"
-              label="孔口y">
+              label="上传时间">
             </el-table-column>
             <el-table-column
-              prop="orificeZ"
-              align="left"
+              prop="status"
               width="100"
-              label="孔口z">
+              label="状态">
             </el-table-column>
-            <el-table-column
-              width="100"
-              align="left"
-              prop="waterSampleNum"
-              label="水样编号">
-            </el-table-column>-->
+
           </el-table>
           <div style="display: flex;justify-content: space-between;margin: 2px">
             <div style="display: flex;justify-content: space-between;margin: 2px">
@@ -159,25 +122,12 @@
         totalCount: -1,
         currentPage: 1,
         safeSimulation: {
-          wellId: "sxkysw8",
-          lotName: null,
-          mineName:'',
-          hydrologyName: "4114辅顺460m水文孔",
-          observationLayer: null,
-          sensor: "水位传感器",
-          oblayerThick: null,
-          oblayerDepth: null,
-          holeDepth: null,
-          aperture: null,
-          orificeX: null,
-          orificeY: null,
-          orificeZ: null,
-          realTimeData: "0.62314",
-          date: "2019-05-21",
-          time: "23:50:19",
-          waterSampleNum: null,
-          insertTime: ""
-
+          mine:"许厂",
+          system: "",
+          file: "",
+          size: "",
+          time: "",
+          status: ""
 
         },
       };
@@ -218,8 +168,8 @@
           const {
             export_json_to_excel
           } = require('../../excel/Export2Excel');
-          const tHeader = ['序号', '煤矿名称', '地段名称', '水文点名', '观测层位','传感器类型', '观测层厚', '观测层深','孔深','孔径','孔口x','孔口y','孔口z','水样编号'];
-          const filterVal = ['number','mineName','lotName', 'observationLayer', 'sensor','oblayerThick', 'oblayerDepth', 'holeDepth', 'aperture','orificeX','orificeY','orificeZ','waterSampleNum'];
+          const tHeader = ['序号', '煤矿名称', '系统名称', '文件名称', '文件大小','上传时间', '状态'];
+          const filterVal = ['number','mine','system', 'file', 'size','time', 'status'];
           const list = this.safeSimulations;
           const data = this.formatJson(filterVal, list);
           export_json_to_excel(tHeader, data, '列表excel');
@@ -236,7 +186,7 @@
         var _this = this;
         this.tableLoading = true;
 
-        this.getRequest("/api/hydrology/getHydrologyData?page=" + this.currentPage + "&size=10&mineName="+this.mineName).then(resp=> {
+        this.getRequest("/api/fileupload/getFileuploadData?page=" + this.currentPage + "&size=10&mine="+this.mineName).then(resp=> {
           this.tableLoading = false;
           if (resp && resp.status == 200) {
             var data = resp.data;
@@ -245,7 +195,13 @@
             if(data.list.length==0){
               alert("未查询到相关数据！")
             }
-            _this.date=formatDate(new Date(data.list[0].insertTime),"yyyy-MM-dd hh:mm:ss");
+            for (var i = 0; i < data.list.length; i++){
+              var times = data.list[i].time;
+              var datee = new Date(times).toJSON();
+              var dateee = new Date(datee).toISOString().replace(/T/g,' ').replace(/\.[\d]{3}Z/,'')  
+              data.list[i].time= dateee;
+            }
+            _this.date=data.list[0].time;
             _this.safeSimulations = data.list;
             _this.totalCount = data.count;
 //            _this.emptyEmpData();
